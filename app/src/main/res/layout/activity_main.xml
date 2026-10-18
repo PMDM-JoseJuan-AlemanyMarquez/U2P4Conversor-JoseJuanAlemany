@@ -10,61 +10,76 @@
     tools:context=".MainActivity">
 
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
+        android:id="@+id/tv_info"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
-        android:text="@string/textViewInfo"
+        android:layout_marginEnd="24dp"
+        android:gravity="center"
         android:textColor="#0000FF"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <EditText
-        android:id="@+id/et_Pulgada"
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/sw_invertir"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
+        android:layout_marginEnd="24dp"
+        android:minHeight="48dp"
+        android:text="@string/switchInvertir"
+        android:textColor="#1A1A1A"
+        app:layout_constraintTop_toBottomOf="@id/tv_info"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <EditText
+        android:id="@+id/et_valor"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="48dp"
         android:gravity="center"
-        android:hint="@string/textViewHintPedir"
         android:importantForAutofill="no"
         android:inputType="numberDecimal"
         android:minHeight="48dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sw_invertir"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textView" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
-        android:id="@+id/button_Convertir"
+        android:id="@+id/btn_convertir"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="24dp"
         android:text="@string/buttonConvertir"
-        app:layout_constraintEnd_toEndOf="@id/et_Pulgada"
-        app:layout_constraintStart_toStartOf="@id/et_Pulgada"
-        app:layout_constraintTop_toBottomOf="@id/et_Pulgada" />
+        app:layout_constraintTop_toBottomOf="@id/et_valor"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <EditText
-        android:id="@+id/et_Resultado"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/tv_resultado"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
+        android:layout_marginEnd="24dp"
         android:gravity="center"
-        android:hint="@string/editTextHintResultado"
-        android:importantForAutofill="no"
-        android:inputType="numberDecimal"
         android:minHeight="48dp"
-        app:layout_constraintEnd_toEndOf="@id/et_Pulgada"
-        app:layout_constraintStart_toStartOf="@id/et_Pulgada"
-        app:layout_constraintTop_toBottomOf="@id/button_Convertir" />
+        android:textColor="#0B3D91"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        tools:text="2,54 centímetros"
+        app:layout_constraintTop_toBottomOf="@id/btn_convertir"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
