@@ -5,6 +5,9 @@
     <string name="buttonConvertir">Convertir</string>
     <string name="switchInvertir">Invertir sentido</string>
     <string name="resultadoFormato">%1$.2f %2$s</string>
+    <string name="errorVacio">El valor no puede estar vacío</string>
+    <string name="errorMinimo">Sólo números &gt;=1</string>
+    <string name="errorFormato">Introduce un número válido</string>
     <string name="unidadPulgadas">pulgadas</string>
     <string name="unidadCentimetros">centímetros</string>
 </resources>
