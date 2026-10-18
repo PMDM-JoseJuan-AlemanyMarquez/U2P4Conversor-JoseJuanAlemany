@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.graphics.Insets;
@@ -17,6 +18,11 @@ import androidx.core.view.WindowInsetsCompat;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "LogsConversor";
+
+    // Claves para guardar el estado de la pantalla al girar el dispositivo
+    private static final String KEY_RESULTADO = "resultado";
+    private static final String KEY_ERROR = "error";
+    private static final String KEY_ERROR_VISIBLE = "errorVisible";
 
     // TODO: Activ 1.1 Factor de conversión: 1 pulgada = 2.54 cm
     private static final double CM_POR_PULGADA = 2.54;
@@ -77,6 +83,31 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         Log.d(TAG, "onDestroy");
+    }
+
+    // TODO: Activ 4.1 Respuesta: al girar el dispositivo Android destruye la Activity (onDestroy) y crea
+    //  otra nueva (onCreate) porque cambia la configuración. La interfaz se infla de nuevo desde el
+    //  layout y los TextView vuelven a su estado inicial: pierden el texto (un TextView no lo guarda por
+    //  defecto) y el TextView de error vuelve a estar oculto. Las variables de la Activity también se pierden.
+    //  Los EditText con id sí recuperan su texto solos porque guardan su estado.
+    // TODO: Activ 4.2 Solución: guardar el estado en onSaveInstanceState y recuperarlo en onRestoreInstanceState
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(KEY_RESULTADO, tvResultado.getText().toString());
+        outState.putString(KEY_ERROR, tvError.getText().toString());
+        outState.putBoolean(KEY_ERROR_VISIBLE, tvError.getVisibility() == View.VISIBLE);
+        Log.d(TAG, "onSaveInstanceState");
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        // Se restaura después de super: el Switch recuperado limpia los mensajes y aquí se vuelven a poner
+        tvResultado.setText(savedInstanceState.getString(KEY_RESULTADO, ""));
+        tvError.setText(savedInstanceState.getString(KEY_ERROR, ""));
+        tvError.setVisibility(savedInstanceState.getBoolean(KEY_ERROR_VISIBLE) ? View.VISIBLE : View.GONE);
+        Log.d(TAG, "onRestoreInstanceState");
     }
 
     private void setUI() {
