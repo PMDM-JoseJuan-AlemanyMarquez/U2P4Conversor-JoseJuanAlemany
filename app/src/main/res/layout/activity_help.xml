@@ -58,6 +58,14 @@
             <TextView
                 style="@style/TextoAyuda"
                 android:text="@string/ayudaErrores" />
+
+            <TextView
+                style="@style/TextoAyudaTitulo"
+                android:text="@string/ayudaValoracionTitulo" />
+
+            <TextView
+                style="@style/TextoAyuda"
+                android:text="@string/ayudaValoracion" />
         </LinearLayout>
     </ScrollView>
 
