@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Tema claro: el fondo de la app es una imagen clara y el texto debe leerse bien -->
+    <style name="Theme.U2P4Conversor" parent="Theme.Material3.Light.NoActionBar" />
+</resources>
