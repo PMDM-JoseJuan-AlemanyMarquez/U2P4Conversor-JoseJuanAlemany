@@ -66,6 +66,24 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
+        android:id="@+id/tv_error"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:gravity="center"
+        android:textColor="#D50000"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        tools:text="Mensaje de error"
+        tools:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/btn_convertir"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
         android:id="@+id/tv_resultado"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -78,7 +96,7 @@
         android:textSize="24sp"
         android:textStyle="bold"
         tools:text="2,54 centímetros"
-        app:layout_constraintTop_toBottomOf="@id/btn_convertir"
+        app:layout_constraintTop_toBottomOf="@id/tv_error"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

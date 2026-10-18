@@ -2,6 +2,7 @@ package dam.josejuan.u2p4conversor;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText etValor;
     private SwitchCompat swInvertir;
     private TextView tvResultado;
+    private TextView tvError;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,22 +46,25 @@ public class MainActivity extends AppCompatActivity {
         etValor = findViewById(R.id.et_valor);
         swInvertir = findViewById(R.id.sw_invertir);
         tvResultado = findViewById(R.id.tv_resultado);
+        tvError = findViewById(R.id.tv_error);
         Button btnConvertir = findViewById(R.id.btn_convertir);
 
         actualizarEtiquetas();
 
         btnConvertir.setOnClickListener(view -> {
             try {
+                limpiarMensajes();
                 tvResultado.setText(convertir(etValor.getText().toString()));
             } catch (Exception e) {
                 Log.e(TAG, String.valueOf(e.getMessage()));
+                mostrarError(e);
             }
         });
 
         // TODO: Activ 1.1 Al cambiar el sentido se actualizan los textos y se borra el resultado anterior
         swInvertir.setOnCheckedChangeListener((boton, invertido) -> {
             actualizarEtiquetas();
-            tvResultado.setText("");
+            limpiarMensajes();
         });
     }
 
@@ -72,9 +77,32 @@ public class MainActivity extends AppCompatActivity {
         etValor.setHint(getString(R.string.hintValor, getString(origen)));
     }
 
+    // TODO: Activ 2.2 Oculta el error y borra el resultado anterior
+    private void limpiarMensajes() {
+        tvResultado.setText("");
+        tvError.setVisibility(View.GONE);
+    }
+
+    // TODO: Activ 2.2 Muestra el mensaje de error en el TextView (sólo visible cuando hay error)
+    private void mostrarError(Exception e) {
+        String mensaje = (e instanceof NumberFormatException)
+                ? getString(R.string.errorFormato)
+                : e.getMessage();
+        tvError.setText(mensaje);
+        tvError.setVisibility(View.VISIBLE);
+    }
+
     // TODO: Activ 1.1 y 1.2 Conversión en ambos sentidos y resultado con dos decimales
-    private String convertir(String texto) {
-        double valor = Double.parseDouble(texto.replace(',', '.'));
+    // TODO: Activ 2.1 Sólo se convierten valores >= 1; en otro caso se lanza una excepción que
+    //  captura el único try/catch de setUI()
+    private String convertir(String texto) throws Exception {
+        if (texto.trim().isEmpty()) {
+            throw new Exception(getString(R.string.errorVacio));
+        }
+        double valor = Double.parseDouble(texto.trim().replace(',', '.'));
+        if (valor < 1) {
+            throw new Exception(getString(R.string.errorMinimo));
+        }
         boolean invertido = swInvertir.isChecked();
         double resultado = invertido ? valor / CM_POR_PULGADA : valor * CM_POR_PULGADA;
         int unidadDestino = invertido ? R.string.unidadPulgadas : R.string.unidadCentimetros;
