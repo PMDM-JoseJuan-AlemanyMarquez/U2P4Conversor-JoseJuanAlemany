@@ -39,6 +39,44 @@ public class MainActivity extends AppCompatActivity {
         });
 
         setUI();
+        Log.d(TAG, "onCreate");
+    }
+
+    // TODO: Activ 3.1 Mensajes de Log con los estados del ciclo de vida de la Activity
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(TAG, "onRestart");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy");
     }
 
     private void setUI() {
@@ -52,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
         actualizarEtiquetas();
 
         btnConvertir.setOnClickListener(view -> {
+            // TODO: Activ 3.2 Log del botón pulsado
+            Log.i(TAG, "Botón pulsado: Convertir");
             try {
                 limpiarMensajes();
                 tvResultado.setText(convertir(etValor.getText().toString()));
@@ -63,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
         // TODO: Activ 1.1 Al cambiar el sentido se actualizan los textos y se borra el resultado anterior
         swInvertir.setOnCheckedChangeListener((boton, invertido) -> {
+            Log.i(TAG, "Botón pulsado: Invertir sentido (" + (invertido ? "activado" : "desactivado") + ")");
             actualizarEtiquetas();
             limpiarMensajes();
         });
