@@ -8,6 +8,28 @@
     <string name="errorVacio">El valor no puede estar vacío</string>
     <string name="errorMinimo">Sólo números &gt;=1</string>
     <string name="errorFormato">Introduce un número válido</string>
+
+    <!-- Unidades (nombre en plural) -->
     <string name="unidadPulgadas">pulgadas</string>
     <string name="unidadCentimetros">centímetros</string>
+    <string name="unidadKilogramos">kilogramos</string>
+    <string name="unidadLibras">libras</string>
+    <string name="unidadKilometros">kilómetros</string>
+    <string name="unidadMillas">millas</string>
+
+    <!-- Conversiones disponibles: el orden debe coincidir con MainActivity.CONVERSIONES -->
+    <string-array name="conversiones">
+        <item>Pulgadas ↔ Centímetros</item>
+        <item>Kilogramos ↔ Libras</item>
+        <item>Kilómetros ↔ Millas</item>
+    </string-array>
+
+    <!-- Ayuda -->
+    <string name="ayudaDescripcion">Ayuda</string>
+    <string name="ayudaTitulo">Ayuda</string>
+    <string name="ayudaUsoTitulo">Cómo se usa</string>
+    <string name="ayudaUso">1. Elige el tipo de conversión en la lista desplegable (pulgadas y centímetros, kilogramos y libras, kilómetros y millas).\n2. Por defecto se convierte de la primera unidad a la segunda. Activa «Invertir sentido» para convertir al revés.\n3. Escribe la cantidad en el campo de texto. Puedes usar punto o coma para los decimales.\n4. Pulsa «Convertir». El resultado aparece debajo con dos decimales.</string>
+    <string name="ayudaErroresTitulo">Mensajes de error</string>
+    <string name="ayudaErrores">• «El valor no puede estar vacío»: has pulsado Convertir sin escribir ninguna cantidad.\n• «Sólo números &gt;=1»: sólo se pueden convertir cantidades mayores o iguales que uno.\n• «Introduce un número válido»: el texto escrito no es un número (por ejemplo, sólo un punto).\nLos errores se muestran en rojo bajo el botón Convertir y desaparecen al convertir de nuevo o al cambiar de conversión.</string>
+    <string name="buttonVolver">Volver</string>
 </resources>

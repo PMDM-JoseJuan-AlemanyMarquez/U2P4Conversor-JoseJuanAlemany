@@ -1,10 +1,15 @@
 package dam.josejuan.u2p4conversor;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -23,15 +28,25 @@ public class MainActivity extends AppCompatActivity {
     private static final String KEY_RESULTADO = "resultado";
     private static final String KEY_ERROR = "error";
     private static final String KEY_ERROR_VISIBLE = "errorVisible";
+    private static final String KEY_POSICION = "posicionConversion";
 
-    // TODO: Activ 1.1 Factor de conversión: 1 pulgada = 2.54 cm
-    private static final double CM_POR_PULGADA = 2.54;
+    // TODO: Activ 5.1 Conversiones disponibles, cada una válida en doble sentido.
+    //  El orden coincide con R.array.conversiones (opciones del Spinner).
+    private static final Conversion[] CONVERSIONES = {
+            new Conversion(R.string.unidadPulgadas, R.string.unidadCentimetros, 2.54),
+            new Conversion(R.string.unidadKilogramos, R.string.unidadLibras, 2.2046226218),
+            new Conversion(R.string.unidadKilometros, R.string.unidadMillas, 0.6213711922)
+    };
 
     private TextView tvInfo;
-    private EditText etValor;
+    private Spinner spConversion;
     private SwitchCompat swInvertir;
+    private EditText etValor;
     private TextView tvResultado;
     private TextView tvError;
+
+    // Última conversión seleccionada, para borrar los mensajes sólo cuando el usuario cambia de opción
+    private int posicionAnterior = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
     //  otra nueva (onCreate) porque cambia la configuración. La interfaz se infla de nuevo desde el
     //  layout y los TextView vuelven a su estado inicial: pierden el texto (un TextView no lo guarda por
     //  defecto) y el TextView de error vuelve a estar oculto. Las variables de la Activity también se pierden.
-    //  Los EditText con id sí recuperan su texto solos porque guardan su estado.
+    //  Los EditText, el Switch y el Spinner con id sí recuperan su estado solos.
     // TODO: Activ 4.2 Solución: guardar el estado en onSaveInstanceState y recuperarlo en onRestoreInstanceState
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -97,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         outState.putString(KEY_RESULTADO, tvResultado.getText().toString());
         outState.putString(KEY_ERROR, tvError.getText().toString());
         outState.putBoolean(KEY_ERROR_VISIBLE, tvError.getVisibility() == View.VISIBLE);
+        outState.putInt(KEY_POSICION, posicionAnterior);
         Log.d(TAG, "onSaveInstanceState");
     }
 
@@ -104,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         // Se restaura después de super: el Switch recuperado limpia los mensajes y aquí se vuelven a poner
+        posicionAnterior = savedInstanceState.getInt(KEY_POSICION, 0);
         tvResultado.setText(savedInstanceState.getString(KEY_RESULTADO, ""));
         tvError.setText(savedInstanceState.getString(KEY_ERROR, ""));
         tvError.setVisibility(savedInstanceState.getBoolean(KEY_ERROR_VISIBLE) ? View.VISIBLE : View.GONE);
@@ -112,11 +129,34 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUI() {
         tvInfo = findViewById(R.id.tv_info);
-        etValor = findViewById(R.id.et_valor);
+        spConversion = findViewById(R.id.sp_conversion);
         swInvertir = findViewById(R.id.sw_invertir);
+        etValor = findViewById(R.id.et_valor);
         tvResultado = findViewById(R.id.tv_resultado);
         tvError = findViewById(R.id.tv_error);
         Button btnConvertir = findViewById(R.id.btn_convertir);
+        ImageButton ibAyuda = findViewById(R.id.ib_ayuda);
+
+        // TODO: Activ 5.1 El Spinner permite elegir la conversión
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this, R.array.conversiones, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spConversion.setAdapter(adapter);
+        spConversion.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position != posicionAnterior) {
+                    posicionAnterior = position;
+                    limpiarMensajes();
+                }
+                actualizarEtiquetas();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Nada que hacer
+            }
+        });
 
         actualizarEtiquetas();
 
@@ -138,15 +178,26 @@ public class MainActivity extends AppCompatActivity {
             actualizarEtiquetas();
             limpiarMensajes();
         });
+
+        // TODO: Activ 5.2 El botón de ayuda abre la Activity con las instrucciones (Intent explícito)
+        ibAyuda.setOnClickListener(view -> {
+            Log.i(TAG, "Botón pulsado: Ayuda");
+            startActivity(new Intent(this, HelpActivity.class));
+        });
     }
 
-    // TODO: Activ 1.1 Título y pista del campo según el sentido elegido
+    private Conversion conversionActual() {
+        return CONVERSIONES[Math.max(0, spConversion.getSelectedItemPosition())];
+    }
+
+    // TODO: Activ 1.1 y 5.1 Título y pista del campo según la conversión y el sentido elegidos
     private void actualizarEtiquetas() {
+        Conversion conversion = conversionActual();
         boolean invertido = swInvertir.isChecked();
-        int origen = invertido ? R.string.unidadCentimetros : R.string.unidadPulgadas;
-        int destino = invertido ? R.string.unidadPulgadas : R.string.unidadCentimetros;
-        tvInfo.setText(getString(R.string.tituloConversor, getString(origen), getString(destino)));
-        etValor.setHint(getString(R.string.hintValor, getString(origen)));
+        String origen = getString(conversion.getOrigen(invertido));
+        String destino = getString(conversion.getDestino(invertido));
+        tvInfo.setText(getString(R.string.tituloConversor, origen, destino));
+        etValor.setHint(getString(R.string.hintValor, origen));
     }
 
     // TODO: Activ 2.2 Oculta el error y borra el resultado anterior
@@ -164,9 +215,9 @@ public class MainActivity extends AppCompatActivity {
         tvError.setVisibility(View.VISIBLE);
     }
 
-    // TODO: Activ 1.1 y 1.2 Conversión en ambos sentidos y resultado con dos decimales
+    // TODO: Activ 1.1, 1.2, 5.1 Conversión en ambos sentidos con el resultado a dos decimales
     // TODO: Activ 2.1 Sólo se convierten valores >= 1; en otro caso se lanza una excepción que
-    //  captura el único try/catch de setUI()
+    //  captura el único try/catch de setUI(). Lo comparten todas las conversiones.
     private String convertir(String texto) throws Exception {
         if (texto.trim().isEmpty()) {
             throw new Exception(getString(R.string.errorVacio));
@@ -175,9 +226,9 @@ public class MainActivity extends AppCompatActivity {
         if (valor < 1) {
             throw new Exception(getString(R.string.errorMinimo));
         }
+        Conversion conversion = conversionActual();
         boolean invertido = swInvertir.isChecked();
-        double resultado = invertido ? valor / CM_POR_PULGADA : valor * CM_POR_PULGADA;
-        int unidadDestino = invertido ? R.string.unidadPulgadas : R.string.unidadCentimetros;
-        return getString(R.string.resultadoFormato, resultado, getString(unidadDestino));
+        double resultado = conversion.convertir(valor, invertido);
+        return getString(R.string.resultadoFormato, resultado, getString(conversion.getDestino(invertido)));
     }
 }
