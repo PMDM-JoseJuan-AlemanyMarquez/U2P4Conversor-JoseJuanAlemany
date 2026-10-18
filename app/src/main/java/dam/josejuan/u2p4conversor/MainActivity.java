@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -30,6 +31,10 @@ public class MainActivity extends AppCompatActivity {
     private static final String KEY_ERROR_VISIBLE = "errorVisible";
     private static final String KEY_POSICION = "posicionConversion";
 
+    // TODO: Activ 6 Valoración guardada de forma persistente en SharedPreferences
+    private static final String PREFS = "u2p4_prefs";
+    private static final String KEY_VALORACION = "valoracion";
+
     // TODO: Activ 5.1 Conversiones disponibles, cada una válida en doble sentido.
     //  El orden coincide con R.array.conversiones (opciones del Spinner).
     private static final Conversion[] CONVERSIONES = {
@@ -44,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
     private EditText etValor;
     private TextView tvResultado;
     private TextView tvError;
+    private TextView tvValoracion;
+    private RatingBar ratingBar;
 
     // Última conversión seleccionada, para borrar los mensajes sólo cuando el usuario cambia de opción
     private int posicionAnterior = 0;
@@ -68,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Log.d(TAG, "onStart");
+        cargarValoracion();
     }
 
     @Override
@@ -86,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         Log.d(TAG, "onStop");
+        guardarValoracion();
     }
 
     @Override
@@ -134,6 +143,8 @@ public class MainActivity extends AppCompatActivity {
         etValor = findViewById(R.id.et_valor);
         tvResultado = findViewById(R.id.tv_resultado);
         tvError = findViewById(R.id.tv_error);
+        tvValoracion = findViewById(R.id.tv_valoracion);
+        ratingBar = findViewById(R.id.rating_bar);
         Button btnConvertir = findViewById(R.id.btn_convertir);
         ImageButton ibAyuda = findViewById(R.id.ib_ayuda);
 
@@ -184,6 +195,36 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "Botón pulsado: Ayuda");
             startActivity(new Intent(this, HelpActivity.class));
         });
+    }
+
+    // TODO: Activ 6 Al mostrarse la Activity: si ya hay valoración guardada se enseña y se bloquea;
+    //  si no, el usuario puede valorar (y cambiar la valoración) mientras la Activity siga en primer plano
+    private void cargarValoracion() {
+        float guardada = getSharedPreferences(PREFS, MODE_PRIVATE).getFloat(KEY_VALORACION, 0f);
+        if (guardada > 0f) {
+            ratingBar.setRating(guardada);
+            ratingBar.setIsIndicator(true);
+            tvValoracion.setText(R.string.valoracionGracias);
+        } else {
+            ratingBar.setIsIndicator(false);
+            tvValoracion.setText(R.string.valoracionPide);
+        }
+    }
+
+    // TODO: Activ 6 Al dejar de verse la Activity (segundo plano o cierre) se guarda la valoración hecha.
+    //  Un giro de pantalla no cuenta: la Activity se recrea y el usuario sigue en primer plano.
+    private void guardarValoracion() {
+        if (isChangingConfigurations() || ratingBar.isIndicator()) {
+            return;
+        }
+        float valoracion = ratingBar.getRating();
+        if (valoracion > 0f) {
+            getSharedPreferences(PREFS, MODE_PRIVATE)
+                    .edit()
+                    .putFloat(KEY_VALORACION, valoracion)
+                    .apply();
+            Log.d(TAG, "Valoración guardada: " + valoracion);
+        }
     }
 
     private Conversion conversionActual() {

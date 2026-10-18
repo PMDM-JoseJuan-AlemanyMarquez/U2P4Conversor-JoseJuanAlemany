@@ -31,5 +31,9 @@
     <string name="ayudaUso">1. Elige el tipo de conversión en la lista desplegable (pulgadas y centímetros, kilogramos y libras, kilómetros y millas).\n2. Por defecto se convierte de la primera unidad a la segunda. Activa «Invertir sentido» para convertir al revés.\n3. Escribe la cantidad en el campo de texto. Puedes usar punto o coma para los decimales.\n4. Pulsa «Convertir». El resultado aparece debajo con dos decimales.</string>
     <string name="ayudaErroresTitulo">Mensajes de error</string>
     <string name="ayudaErrores">• «El valor no puede estar vacío»: has pulsado Convertir sin escribir ninguna cantidad.\n• «Sólo números &gt;=1»: sólo se pueden convertir cantidades mayores o iguales que uno.\n• «Introduce un número válido»: el texto escrito no es un número (por ejemplo, sólo un punto).\nLos errores se muestran en rojo bajo el botón Convertir y desaparecen al convertir de nuevo o al cambiar de conversión.</string>
+    <string name="ayudaValoracionTitulo">Valoración</string>
+    <string name="ayudaValoracion">Puedes valorar la aplicación con las estrellas de la pantalla principal. Mientras no salgas de la pantalla puedes cambiar tu valoración; cuando la app pasa a segundo plano o se cierra, la valoración se guarda y ya no se puede modificar.</string>
+    <string name="valoracionPide">Valora la aplicación</string>
+    <string name="valoracionGracias">Gracias por tu valoración</string>
     <string name="buttonVolver">Volver</string>
 </resources>
