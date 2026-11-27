@@ -7,7 +7,7 @@ Aplicación Android (Java, Android Studio) que convierte cantidades entre unidad
 
 ## Vídeo explicativo
 
-▶️ **Enlace al vídeo (YouTube, oculto):** _pendiente de añadir_ → `https://youtu.be/XXXXXXXXXXX`
+▶️ **Enlace al vídeo (YouTube, oculto):** _pendiente de añadir_ → `https://youtu.be/Ju3cIn8ZCjY`
 
 ## Qué hace la aplicación
 
